@@ -1,3 +1,5 @@
+import com.sun.source.tree.Tree;
+
 /**
  * FibonacciHeap
  *
@@ -7,6 +9,7 @@
 public class FibonacciHeap
 {
 	public HeapNode min;
+	public int size;
 	
 	/**
 	 *
@@ -25,9 +28,26 @@ public class FibonacciHeap
 	 * Insert (key,info) into the heap and return the newly generated HeapNode.
 	 *
 	 */
-	public HeapNode insert(int key, String info) 
-	{    
-		return null; // should be replaced by student code
+	public HeapNode insert(int key, String info)
+	{
+		HeapNode node = new HeapNode(key, info);
+
+		if (this.size == 0) {
+			min = node;
+		}
+		else {
+			node.next = min;
+			node.prev = min.prev;
+			min.prev = node;
+			if (node.prev != null) {
+				node.prev.next = node;
+			}
+		}
+		if (key < min.key){
+			min = node;
+		}
+		this.size++;
+		return node;
 	}
 
 	/**
@@ -131,7 +151,7 @@ public class FibonacciHeap
 	 * Class implementing a node in a Fibonacci Heap.
 	 *  
 	 */
-	public static class HeapNode{
+	public static class HeapNode {
 		public int key;
 		public String info;
 		public HeapNode child;
@@ -140,5 +160,16 @@ public class FibonacciHeap
 		public HeapNode parent;
 		public int rank;
 		public boolean mark;
+
+		public HeapNode(int key, String info) {
+			this.key = key;
+			this.info = info;
+			this.parent = null;
+			this.child = null;
+			this.next = null;
+			this.prev = null;
+			this.mark = false;
+			this.rank = 0;
+		}
 	}
 }

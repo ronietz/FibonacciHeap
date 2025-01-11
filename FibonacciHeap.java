@@ -11,7 +11,8 @@ public class FibonacciHeap
 	public HeapNode min;
 	public int size;
 	public int numOfTrees;
-	
+	public int links;
+
 	/**
 	 *
 	 * Constructor to initialize an empty heap.
@@ -23,7 +24,7 @@ public class FibonacciHeap
 	}
 
 	/**
-	 * 
+	 *
 	 * pre: key > 0
 	 *
 	 * Insert (key,info) into the heap and return the newly generated HeapNode.
@@ -69,7 +70,7 @@ public class FibonacciHeap
 	 */
 	public HeapNode findMin()
 	{
-		return null; // should be replaced by student code
+		return min; // should be replaced by student code
 	}
 
 	/**
@@ -202,7 +203,7 @@ public class FibonacciHeap
 	 */
 	public int totalLinks()
 	{
-		return 0; // should be replaced by student code
+		return links; // should be replaced by student code
 	}
 
 
@@ -224,7 +225,17 @@ public class FibonacciHeap
 	 */
 	public void meld(FibonacciHeap heap2)
 	{
-		return; // should be replaced by student code   		
+		// add the two heaps
+		HeapNode minNext = this.min.next;
+		this.min.next = heap2.min;
+		heap2.min.prev = this.min;
+		heap2.min.prev.next = minNext;
+		minNext.prev = heap2.min.prev;
+
+		// update the min value if needed
+		if(heap2.min.key < this.min.key){
+			this.min = heap2.min;
+		}
 	}
 
 	/**
@@ -245,7 +256,7 @@ public class FibonacciHeap
 	 */
 	public int numTrees()
 	{
-		return 0; // should be replaced by student code
+		return size; // should be replaced by student code
 	}
 
 	/**

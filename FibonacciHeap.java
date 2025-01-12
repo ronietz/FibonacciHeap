@@ -20,7 +20,10 @@ public class FibonacciHeap
 	 */
 	public FibonacciHeap()
 	{
-		// should be replaced by student code
+		this.min = null;
+		this.size = 0;
+		this.numOfTrees = 0;
+		this.links = 0;
 	}
 
 	/**
@@ -181,10 +184,74 @@ public class FibonacciHeap
 	 * 
 	 */
 	public void decreaseKey(HeapNode x, int diff) 
-	{    
-		return; // should be replaced by student code
+	{
+		x.key = x.key - diff;
+		// if there is a violation cut the child
+		if(x.key < x.parent.key){
+			this.cascadingCut(x,x.parent);
+		}
 	}
 
+
+	/**
+	 *
+	 *
+	 * cut the necessary modes from the heap
+	 *
+	 */
+	public void cascadingCut(HeapNode x, HeapNode parent){
+		this.cut(x,parent);
+		if (parent.parent != null){
+			if(!parent.mark){
+				parent.mark = true;
+			}else{
+				this.cascadingCut(parent,parent.parent);
+			}
+		}
+	}
+
+
+	/**
+	 *
+	 *
+	 * cut the x from its parent and make it new root and update the min pointer
+	 *
+	 */
+	public void cut(HeapNode x, HeapNode parent){
+		x.parent = null;
+		x.mark = false;
+		parent.rank = parent.rank - 1;
+		if(x.next == x){
+			parent.child = null;
+		}else{
+			parent.child = x.next;
+			x.prev.next = x.next;
+			x.next.prev = x.prev;
+		}
+		this.makeRoot(x);
+	}
+
+
+	/**
+	 *
+	 *
+	 * make x node a new root in the heap
+	 *
+	 */
+	public void makeRoot(HeapNode x) {
+		// add the two heaps
+		HeapNode minNext = this.min.next;
+		x.next = this.min.next;
+		this.min.next.prev = x;
+		this.min.next = x;
+		x.prev = this.min;
+
+		// update the min value if needed
+		if(x.key < this.min.key){
+			this.min = x;
+		}
+		numOfTrees++;
+	}
 	/**
 	 * 
 	 * Delete the x from the heap.
@@ -225,16 +292,21 @@ public class FibonacciHeap
 	 */
 	public void meld(FibonacciHeap heap2)
 	{
-		// add the two heaps
-		HeapNode minNext = this.min.next;
-		this.min.next = heap2.min;
-		heap2.min.prev = this.min;
-		heap2.min.prev.next = minNext;
-		minNext.prev = heap2.min.prev;
+		if(heap2.numOfTrees > 0) {
+			// add the two heaps
+			HeapNode minNext = this.min.next;
+			this.min.next = heap2.min;
+			heap2.min.prev = this.min;
+			heap2.min.prev.next = minNext;
+			minNext.prev = heap2.min.prev;
 
-		// update the min value if needed
-		if(heap2.min.key < this.min.key){
-			this.min = heap2.min;
+			// update the min value if needed
+			if (heap2.min.key < this.min.key) {
+				this.min = heap2.min;
+			}
+
+			this.size += heap2.size();
+			this.numOfTrees += heap2.numOfTrees;
 		}
 	}
 
@@ -245,7 +317,7 @@ public class FibonacciHeap
 	 */
 	public int size()
 	{
-		return 42; // should be replaced by student code
+		return this.size; // should be replaced by student code
 	}
 
 

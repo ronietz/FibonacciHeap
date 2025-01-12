@@ -3,6 +3,43 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class FibHeapTester {
+    public static void printHeapAsDetailedTree(FibonacciHeap heap) {
+        if (heap.min == null) {
+            System.out.println("The Fibonacci Heap is empty.");
+            return;
+        }
+
+        System.out.println("Fibonacci Heap (Detailed Tree Representation):");
+        FibonacciHeap.HeapNode current = heap.min;
+        int treeIndex = 1;
+        do {
+            System.out.println("Tree " + treeIndex + " (Root Key: " + current.key + "):");
+            printTreeWithChildren(current, "  ");
+            current = current.next;
+            treeIndex++;
+        } while (current != heap.min);
+    }
+
+    private static void printTreeWithChildren(FibonacciHeap.HeapNode node, String indent) {
+        // info of current node
+        System.out.println(indent + "- Node [Key=" + node.key + ", Rank=" + node.rank + ", Mark=" + node.mark + "]");
+
+        // show Node's children if exists
+        if (node.child != null) {
+            System.out.println(indent + "  Children of Node " + node.key + ":");
+            FibonacciHeap.HeapNode child = node.child;
+            do {
+                printTreeWithChildren(child, indent + "    ");
+                child = child.next;
+            } while (child != node.child);
+        } else {
+            System.out.println(indent + "  No children.");
+        }
+    }
+    public static void printHeap(FibonacciHeap heap) {
+        printHeapAsDetailedTree(heap);
+    }
+
     public static void insertTests(FibonacciHeap fh) {
         System.out.println("----insert Tests----");
 
@@ -104,14 +141,13 @@ public class FibHeapTester {
     }
 
 
-
     public static void main(String[] args) {
         FibonacciHeap fh = new FibonacciHeap();
         insertTests(fh);
-
         FibHeapTester.testMeld();
         FibHeapTester.testMeldEmptyHeap();
 //        FibHeapTester.testCascadingCut();
+        
 
     }
 }

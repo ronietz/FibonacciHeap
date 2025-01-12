@@ -1,5 +1,8 @@
 import com.sun.source.tree.Tree;
 
+import java.util.Arrays;
+import java.util.Comparator;
+
 /**
  * FibonacciHeap
  *
@@ -12,6 +15,7 @@ public class FibonacciHeap
 	public int size;
 	public int numOfTrees;
 	public int links;
+	public int cuts;
 
 	/**
 	 *
@@ -24,6 +28,7 @@ public class FibonacciHeap
 		this.size = 0;
 		this.numOfTrees = 0;
 		this.links = 0;
+		this.cuts = 0;
 	}
 
 	/**
@@ -79,51 +84,46 @@ public class FibonacciHeap
 	/**
 	 *
 	 * connect two trees in the same rank
+	 * returns pointer to new root
 	 *
 	 */
-	public void connectTreesSameRank(HeapNode root1, HeapNode root2)
+	public HeapNode connectTreesSameRank(HeapNode root1, HeapNode root2)
 	{
-		//set smaller root as new root
-		if (root1.key < root2.key){
-			//set root2 as first child of root1
-			//set root2 next to current last child
-			root1.child.prev.next = root2;
-			root2.prev = root1.child.prev;
+		HeapNode minRoot = root2;
+		HeapNode maxRoot = root1;
+		if (root1.key < root2.key) {
+			minRoot = root1;
+			maxRoot = root2;
+		}
 
-			//set root2 prev to current first child
-			root1.child.prev = root2;
-			root2.next = root1.child;
+		if (minRoot.rank != 0) {
+			//set maxRoot as first child of minRoot
+			//set maxRoot next to current last child
+			minRoot.child.prev.next = maxRoot;
+			maxRoot.prev = minRoot.child.prev;
 
-			//set parent-child pointers
-			root1.child = root2;
-			root2.parent = root1;
-
-			// set rank
-			//TO DO!!
-			//return new root
-			//TO DO!!
+			//set maxRoot prev to current first child
+			minRoot.child.prev = maxRoot;
+			maxRoot.next = minRoot.child;
 		}
 		else {
-			//set root1 as first child of root2
-			//set root1 next to current last child
-			root2.child.prev.next = root1;
-			root1.prev = root2.child.prev;
-
-			//set root1 prev to current first child
-			root2.child.prev = root1;
-			root1.next = root2.child;
-
-			//set parent-child pointers
-			root2.child = root1;
-			root1.parent = root2;
-
-			// set rank
-			//TO DO!!
-			//return new root
-			//TO DO!!
+			maxRoot.next = maxRoot;
+			maxRoot.prev = maxRoot;
 		}
 
-	}
+		//set parent-child pointers
+		minRoot.child = maxRoot;
+		maxRoot.parent = minRoot;
+
+		// set rank
+		minRoot.rank++;
+
+		//update links
+		this.links++;
+
+		//return new root
+        return minRoot;
+    }
 
 	/**
 	 * 
@@ -132,11 +132,18 @@ public class FibonacciHeap
 	 */
 	public void deleteMin()
 	{
-		//save pointer to first child of min, to start with when succesive linking
-		HeapNode root = this.min.child;
+		// check if heap empty - no min to delete
+		if (this.size == 0) {
+			return;
+		}
 
-		//cut min from his children and move them to trees list as roots
-		if (min != null) {
+		//save pointer to first child of min, to start with when succesive linking
+		//if min have no children, pointer will be null, get fixed in else condition
+		HeapNode currRoot = this.min.child;
+
+		//check if min have children
+		// cut min from his children and move them to trees list as roots
+		if (this.min.rank != 0) {
 			// move min children to roots list
 			min.child.prev.next = min.next;
 			min.next.prev = min.child.prev;
@@ -153,27 +160,89 @@ public class FibonacciHeap
 			}
 
 		}
+		else{
+			// min have no kids, save pointer to next node
+			currRoot = this.min.next;
+
+			// cut min from roots list
+			this.min.prev.next = this.min.next;
+			this.min.next.prev = this.min.prev;
+
+		}
+
+		//set new numOfTrees
+		this.numOfTrees = this.numOfTrees - 1 + this.min.rank;
+
 		//do Successive Linking to all trees in heap and find new min
 		int numOfBuckets = (int) Math.floor(Math.log(this.size + 1)) + 1;
 		HeapNode[] buckets = new HeapNode[numOfBuckets];
 
-		for (int i = 0; i < this.numOfTrees; i++) {
-			// DO TO - CHANGE to while new_root.rank != null -> connect trees
-			if (buckets[root.rank] == null) {
-				buckets[root.rank] = root;
+		int initialNumOfTrees = this.numOfTrees;
+		HeapNode[] initialTreesArr = new HeapNode[initialNumOfTrees];
+		HeapNode firstNode = currRoot;
+		int j = 0;
+		do {
+			currRoot = currRoot.next;
+			initialTreesArr[j] = currRoot;
+			j++;
+		}
+		while (currRoot != firstNode);
+
+		for (int i = 0; i < initialNumOfTrees; i++) {
+			currRoot = initialTreesArr[i];
+			//connect until only one tree in the same rank
+			while (buckets[currRoot.rank] != null){
+				currRoot = connectTreesSameRank(buckets[currRoot.rank], currRoot);
+				buckets[currRoot.rank - 1] = null;
+				// change numOfTrees
+				this.numOfTrees--;
 			}
-			else {
-				//new_root = connectTreesSameRank(buckets[root.rank], root);
-				buckets[root.rank] = null;
-				//buckets[new_root.rank]
+			buckets[currRoot.rank] = currRoot;
+		}
+
+		// connect roots to a list and find new min
+		// remove null buckets
+		HeapNode[] treesArray = new HeapNode[this.numOfTrees];
+		j = 0;
+        for (HeapNode bucket : buckets) {
+            if (bucket != null) {
+                treesArray[j] = bucket;
+                j++;
+            }
+        }
+		// connect and find min
+		if (treesArray.length > 0) {
+			int minKey = treesArray[0].key;
+			this.min = treesArray[0];
+			currRoot = treesArray[0];
+			HeapNode nextRoot;
+
+			//set pointers
+			currRoot.parent = null;
+			currRoot.prev = treesArray[treesArray.length - 1];
+			treesArray[treesArray.length - 1].next = currRoot;
+
+			for (int i = 1; i < treesArray.length; i++) {
+				nextRoot = treesArray[i];
+				//check if root is the new min
+				if (nextRoot.key < minKey) {
+					minKey = nextRoot.key;
+					this.min = nextRoot;
+				}
+
+				// set pointers
+				currRoot.next = nextRoot;
+				nextRoot.prev = currRoot;
+				currRoot = nextRoot;
+				nextRoot.parent = null;
 			}
+		}
+		else {
+			min = null;
 		}
 
 		//set size
 		this.size--;
-
-		//set number of trees
-
 	}
 
 	/**
@@ -270,7 +339,7 @@ public class FibonacciHeap
 	 */
 	public int totalLinks()
 	{
-		return links; // should be replaced by student code
+		return this.links;
 	}
 
 
@@ -281,7 +350,7 @@ public class FibonacciHeap
 	 */
 	public int totalCuts()
 	{
-		return 0; // should be replaced by student code
+		return this.cuts;
 	}
 
 
@@ -317,7 +386,7 @@ public class FibonacciHeap
 	 */
 	public int size()
 	{
-		return this.size; // should be replaced by student code
+		return this.size;
 	}
 
 
@@ -328,7 +397,7 @@ public class FibonacciHeap
 	 */
 	public int numTrees()
 	{
-		return size; // should be replaced by student code
+		return this.numOfTrees;
 	}
 
 	/**
@@ -355,5 +424,6 @@ public class FibonacciHeap
 			this.mark = false;
 			this.rank = 0;
 		}
+
 	}
 }

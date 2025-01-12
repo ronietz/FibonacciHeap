@@ -40,36 +40,25 @@ public class FibHeapTester {
         printHeapAsDetailedTree(heap);
     }
 
-    public static void insertTests(FibonacciHeap fh) {
+    public static void insertTests() {
         System.out.println("----insert Tests----");
+        FibonacciHeap fh = new FibonacciHeap();
 
         System.out.println("----insert to empty heap test---");
         fh.insert(10, "roni's information");
-        if (fh.min.key != 10 && fh.size != 1){
-            System.out.println("Error in inserting first key");
-        }
-        else {
-            System.out.println("PASSED!");
-        }
+        assertEquals(10, fh.min.key, "Error empty insert - wrong min key");
+        assertEquals(1, fh.size(), "Error empty insert - wrong size");
 
         System.out.println("----insert new min test---");
         fh.insert(5, "roni's information");
-        if (fh.min.key != 5 && fh.size != 2){
-            System.out.println("Error in inserting new min key");
-        }
-        else {
-            System.out.println("PASSED!");
-        }
+        assertEquals(5, fh.min.key, "Error insert new min - wrong min key");
+        assertEquals(2, fh.size(), "Error insert new min - wrong size");
 
         System.out.println("----insert same key test---");
         fh.insert(10, "another info with 10 key");
-        if (fh.size != 3){
-            System.out.println("Error in inserting same key");
-        }
-        else {
-            System.out.println("PASSED!");
-        }
+        assertEquals(3, fh.size(), "Error insert same key - wrong size");
 
+        System.out.println("TEST INSERT PASSED!");
     }
 
 
@@ -140,14 +129,69 @@ public class FibHeapTester {
         System.out.println("TEST CASCADING CUT PASSED!");
     }
 
+    public static void deleteMinTests() {
+        System.out.println("-----deleteMin test-----");
+        FibonacciHeap fh = new FibonacciHeap();
+        fh.insert(30, "C");
+        fh.insert(50, "E");
+        fh.insert(60, "F");
+        fh.insert(10, "A");
+        fh.insert(80, "H");
+        fh.insert(70, "G");
+        fh.insert(20, "B");
+        fh.insert(40, "D");
+
+        System.out.println("-----deleteMin after inserts test-----");
+        fh.deleteMin();
+        assertEquals(20, fh.min.key, "Error deleteMin - wrong min key");
+        assertEquals(7, fh.size(), "Error deleteMin - wrong size");
+        assertEquals(3, fh.numOfTrees, "Error deleteMin - wrong numOfTrees");
+        printHeap(fh);
+
+        System.out.println("-----deleteMin after deleteMin test-----");
+        fh.deleteMin();
+        assertEquals(30, fh.min.key, "Error deleteMin - wrong min key");
+        assertEquals(6, fh.size(), "Error deleteMin - wrong size");
+        assertEquals(2, fh.numOfTrees, "Error deleteMin - wrong numOfTrees");
+        printHeap(fh);
+
+        System.out.println("-----deleteMin after few actions test-----");
+        FibonacciHeap fh2 = new FibonacciHeap();
+        fh2.insert(3, "C");
+        fh2.insert(5, "E");
+        fh2.insert(60, "F");
+        //fh.meld(fh2);
+        //fh.deleteMin();
+        //assertEquals(5, fh.min.key, "Error deleteMin - wrong min key");
+        //assertEquals(8, fh.size(), "Error deleteMin - wrong size");
+        //assertEquals(1, fh.numOfTrees, "Error deleteMin - wrong numOfTrees");
+        printHeap(fh);
+
+        System.out.println("-----deleteMin 2 keys with minimum val test-----");
+        fh.insert(5, "another 5");
+        fh.deleteMin();
+        assertEquals(5, fh.min.key, "Error deleteMin - wrong min key");
+        assertEquals(8, fh.size(), "Error deleteMin - wrong size");
+        assertEquals(1, fh.numOfTrees, "Error deleteMin - wrong numOfTr");
+        printHeap(fh);
+
+        System.out.println("-----deleteMin after deacreseKey test-----");
+        fh.decreaseKey(fh.min, 2);
+        fh.deleteMin();
+        assertEquals(30, fh.min.key, "Error deleteMin - wrong min key");
+        assertEquals(7, fh.size(), "Error deleteMin - wrong size");
+        assertEquals(3, fh.numOfTrees, "Error deleteMin - wrong numOfTrees");
+        printHeap(fh);
+
+        System.out.println("TEST DELETE MIN PASSED!");
+    }
 
     public static void main(String[] args) {
-        FibonacciHeap fh = new FibonacciHeap();
-        insertTests(fh);
+        insertTests();
         FibHeapTester.testMeld();
         FibHeapTester.testMeldEmptyHeap();
 //        FibHeapTester.testCascadingCut();
-        
+        deleteMinTests();
 
     }
 }

@@ -186,12 +186,26 @@ public class FibHeapTester {
         System.out.println("TEST DELETE MIN PASSED!");
     }
 
+    public static void deleteTests() {
+        System.out.println("-----delete tests-----");
+        FibonacciHeap fh = new FibonacciHeap();
+        FibonacciHeap.HeapNode node1 = fh.insert(10, "A");
+        FibonacciHeap.HeapNode node2 = fh.insert(20, "B");
+        FibonacciHeap.HeapNode node3 = fh.insert(30, "C");
+        FibonacciHeap.HeapNode node4 = fh.insert(50, "D");
+        fh.delete(node3);
+        printHeap(fh);
+
+    }
+
     public static void main(String[] args) {
         insertTests();
         FibHeapTester.testMeld();
         FibHeapTester.testMeldEmptyHeap();
 //        FibHeapTester.testCascadingCut();
-        deleteMinTests();
+        //deleteMinTests();
+        deleteTests();
+
 
     }
 }

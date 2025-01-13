@@ -124,6 +124,39 @@ public class FibonacciHeap
 		//return new root
         return minRoot;
     }
+	/*
+	*
+	* delete min - only cut him from his kids and move them to the trees list as roots
+	*
+	 */
+
+	private void deleteMinWithoutConsolidating(){
+		//check if currMin have children
+		// cut currMin from his children and move them to trees list as roots
+		if (this.min.rank != 0) {
+			// move min children to roots list
+			this.min.child.prev.next = this.min.next;
+			this.min.next.prev = this.min.child.prev;
+
+			this.min.child.prev = this.min.prev;
+			this.min.prev.next = this.min.child;
+
+
+			//cut currMin node from his children
+			HeapNode minChildNode = this.min.child;
+			for (int i = 0; i < this.min.rank; i++) {
+				minChildNode.parent = null;
+				minChildNode = minChildNode.next;
+			}
+
+		}
+		else{
+			// cut min from roots list
+			this.min.prev.next = this.min.next;
+			this.min.next.prev = this.min.prev;
+		}
+
+	}
 
 	/**
 	 * 
@@ -137,38 +170,17 @@ public class FibonacciHeap
 			return;
 		}
 
-		//save pointer to first child of min, to start with when succesive linking
-		//if min have no children, pointer will be null, get fixed in else condition
-		HeapNode currRoot = this.min.child;
-
-		//check if min have children
-		// cut min from his children and move them to trees list as roots
+		//save pointer to first child of min or next root in list, to start with when succesive linking
+		HeapNode currRoot;
 		if (this.min.rank != 0) {
-			// move min children to roots list
-			min.child.prev.next = min.next;
-			min.next.prev = min.child.prev;
-
-			min.child.prev = min.prev;
-			min.prev.next = min.child;
-
-
-			//cut min node from his children
-			HeapNode minChildNode = this.min.child;
-			for (int i = 0; i < this.min.rank; i++) {
-				minChildNode.parent = null;
-				minChildNode = minChildNode.next;
-			}
-
+			 currRoot = this.min.child;
 		}
-		else{
+		else {
 			// min have no kids, save pointer to next node
 			currRoot = this.min.next;
-
-			// cut min from roots list
-			this.min.prev.next = this.min.next;
-			this.min.next.prev = this.min.prev;
-
 		}
+
+		deleteMinWithoutConsolidating();
 
 		//set new numOfTrees
 		this.numOfTrees = this.numOfTrees - 1 + this.min.rank;
@@ -327,8 +339,26 @@ public class FibonacciHeap
 	 *
 	 */
 	public void delete(HeapNode x) 
-	{    
-		return; // should be replaced by student code
+	{
+		//save pointer to min
+		HeapNode currMin = this.min;
+
+		//decrease key of x to bellow min.key
+		decreaseKey(x, (x.key - currMin.key + 1));
+		int xRank = x.rank;
+
+		//call deleteMin without Consolidating
+		deleteMinWithoutConsolidating();
+
+		//set min back to correct current min
+		this.min = currMin;
+
+		//set numOfTrees
+		this.numOfTrees = this.numOfTrees - 1 + xRank;
+
+		//set size
+		this.size--;
+
 	}
 
 

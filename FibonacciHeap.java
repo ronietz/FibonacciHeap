@@ -131,8 +131,8 @@ public class FibonacciHeap
 	 */
 
 	private void deleteMinWithoutConsolidating(){
-		//check if currMin have children
-		// cut currMin from his children and move them to trees list as roots
+		//check if min have children
+		// cut min from his children and move them to trees list as roots
 		if (this.min.rank != 0) {
 			// move min children to roots list
 			this.min.child.prev.next = this.min.next;
@@ -142,12 +142,14 @@ public class FibonacciHeap
 			this.min.prev.next = this.min.child;
 
 
-			//cut currMin node from his children
+			//cut min node from his children
 			HeapNode minChildNode = this.min.child;
 			for (int i = 0; i < this.min.rank; i++) {
 				minChildNode.parent = null;
 				minChildNode = minChildNode.next;
 			}
+			//update cuts
+			this.cuts = this.cuts + min.rank;
 
 		}
 		else{
@@ -313,6 +315,7 @@ public class FibonacciHeap
 	}
 
 
+	/**
 	/**
 	 *
 	 *

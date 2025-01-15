@@ -22,7 +22,7 @@ public class FibHeapTester {
 
     private static void printTreeWithChildren(FibonacciHeap.HeapNode node, String indent) {
         // info of current node
-        System.out.println(indent + "- Node [Key=" + node.key + ", Rank=" + node.rank + ", Mark=" + node.mark + "]");
+        System.out.println(indent + "- Node [Key=" + node.key + ", Rank=" + node.rank + ", Mark=" + node.mark + ", Info= " + node.info + "]");
 
         // show Node's children if exists
         if (node.child != null) {
@@ -198,13 +198,50 @@ public class FibHeapTester {
 
     }
 
+    public static void cutsTests(){
+        System.out.println("-----cuts tests-----");
+        FibonacciHeap fh = new FibonacciHeap();
+        FibonacciHeap.HeapNode node1 = fh.insert(10, "A");
+        FibonacciHeap.HeapNode node2 = fh.insert(20, "B");
+        FibonacciHeap.HeapNode node3 = fh.insert(30, "C");
+        FibonacciHeap.HeapNode node4 = fh.insert(50, "D");
+        FibonacciHeap.HeapNode node5 = fh.insert(60, "F");
+        FibonacciHeap.HeapNode node6 = fh.insert(20, "another 20");
+        FibonacciHeap.HeapNode node7 = fh.insert(30, "another 30");
+
+        System.out.println("-----cuts after deleteMin test-----");
+        fh.deleteMin();
+        assertEquals(0, fh.totalCuts(), "Error deleteMin - wrong totalCuts");
+
+        System.out.println("-----cuts after few deleteMin test-----");
+        fh.deleteMin();
+        fh.deleteMin();
+
+        assertEquals(3, fh.totalCuts(), "Error deleteMin - wrong totalCuts");
+
+        System.out.println("-----cuts after delete test-----");
+        FibonacciHeap.HeapNode node8 = fh.insert(15, " ");
+        FibonacciHeap.HeapNode node9 = fh.insert(46, " ");
+        FibonacciHeap.HeapNode node10 = fh.insert(57, " ");
+        FibonacciHeap.HeapNode node11 = fh.insert(68, " ");
+        FibonacciHeap.HeapNode node12 = fh.insert(3, " ");
+
+        fh.deleteMin();
+        fh.delete(node3);
+        assertEquals(5, fh.totalCuts(), "Error deleteMin - wrong totalCuts");
+
+        System.out.println("-----cuts after decreaseKey test-----");
+        //TO DO
+    }
+
     public static void main(String[] args) {
         insertTests();
         FibHeapTester.testMeld();
         FibHeapTester.testMeldEmptyHeap();
 //        FibHeapTester.testCascadingCut();
         //deleteMinTests();
-        deleteTests();
+        //deleteTests();
+        cutsTests();
 
 
     }

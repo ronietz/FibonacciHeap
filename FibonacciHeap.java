@@ -149,7 +149,7 @@ public class FibonacciHeap
 				minChildNode = minChildNode.next;
 			}
 			//update cuts
-			this.cuts = this.cuts + min.rank;
+			this.cuts += min.rank;
 
 		}
 		else{
@@ -188,7 +188,7 @@ public class FibonacciHeap
 		this.numOfTrees = this.numOfTrees - 1 + this.min.rank;
 
 		//do Successive Linking to all trees in heap and find new min
-		int numOfBuckets = (int) Math.floor(Math.log(this.size + 1)) + 1;
+		int numOfBuckets = (int) Math.floor(Math.log(this.size + 1) / Math.log(2)) + 1;
 		HeapNode[] buckets = new HeapNode[numOfBuckets];
 
 		int initialNumOfTrees = this.numOfTrees;

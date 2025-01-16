@@ -1,8 +1,7 @@
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-
-class FibonacciHeapTest {
+class FibonacciHeapTestChat {
 
     // בדיקות עבור insert
     @Test
@@ -176,4 +175,3 @@ class FibonacciHeapTest {
         assertTrue(heap.totalCuts() > 0);
     }
 }
-

@@ -20,7 +20,7 @@ public class FibonacciHeap
 	/**
 	 *
 	 * Constructor to initialize an empty heap.
-	 *
+	 * Time Complexity: O(1).
 	 */
 	public FibonacciHeap()
 	{
@@ -36,7 +36,7 @@ public class FibonacciHeap
 	 * pre: key > 0
 	 *
 	 * Insert (key,info) into the heap and return the newly generated HeapNode.
-	 *
+	 * Time Complexity: O(1).
 	 */
 	public HeapNode insert(int key, String info)
 	{
@@ -74,7 +74,7 @@ public class FibonacciHeap
 	/**
 	 * 
 	 * Return the minimal HeapNode, null if empty.
-	 *
+	 * Time Complexity:
 	 */
 	public HeapNode findMin()
 	{
@@ -264,15 +264,22 @@ public class FibonacciHeap
 	 * pre: 0<diff<x.key
 	 * 
 	 * Decrease the key of x by diff and fix the heap. 
-	 * 
+	 *  Time Complexity: O(1).
 	 */
 	public void decreaseKey(HeapNode x, int diff) 
 	{
-		x.key = x.key - diff;
-		if (x.parent != null){
-			// if there is a violation cut the child
-			if(x.key < x.parent.key){
-				this.cascadingCut(x,x.parent);
+		if (x != null) {
+			x.key = x.key - diff;
+			if (x.parent != null) {
+				// if there is a violation cut the child
+				if (x.key < x.parent.key) {
+					this.cascadingCut(x, x.parent);
+				}
+			} else {
+				// update the min value if needed
+				if (x.key < this.min.key) {
+					this.min = x;
+				}
 			}
 		}
 	}
@@ -282,7 +289,7 @@ public class FibonacciHeap
 	 *
 	 *
 	 * cut the necessary modes from the heap
-	 *
+	 * Time Complexity: O(1).
 	 */
 	public void cascadingCut(HeapNode x, HeapNode parent){
 		this.cut(x,parent);
@@ -300,7 +307,7 @@ public class FibonacciHeap
 	 *
 	 *
 	 * cut the x from its parent and make it new root and update the min pointer
-	 *
+	 * Time Complexity: O(1).
 	 */
 	public void cut(HeapNode x, HeapNode parent){
 		x.parent = null;
@@ -319,11 +326,10 @@ public class FibonacciHeap
 
 
 	/**
-	/**
 	 *
 	 *
 	 * make x node a new root in the heap
-	 *
+	 * Time Complexity: O(1).
 	 */
 	public void makeRoot(HeapNode x) {
 		// add the two heaps
@@ -339,6 +345,7 @@ public class FibonacciHeap
 		}
 		numOfTrees++;
 	}
+
 	/**
 	 * 
 	 * Delete the x from the heap.
@@ -356,22 +363,21 @@ public class FibonacciHeap
 		//call deleteMin without Consolidating
 		deleteMinWithoutConsolidating();
 
-		//set min back to correct current min
-		this.min = currMin;
-
 		//set numOfTrees
 		this.numOfTrees = this.numOfTrees - 1 + xRank;
 
 		//set size
 		this.size--;
 
+		//set min back to correct current min
+		this.min = currMin;
 	}
 
 
 	/**
 	 * 
 	 * Return the total number of links.
-	 * 
+	 *  Time Complexity: O(1).
 	 */
 	public int totalLinks()
 	{
@@ -382,7 +388,7 @@ public class FibonacciHeap
 	/**
 	 * 
 	 * Return the total number of cuts.
-	 * 
+	 *  Time Complexity: O(1).
 	 */
 	public int totalCuts()
 	{
@@ -393,33 +399,35 @@ public class FibonacciHeap
 	/**
 	 * 
 	 * Meld the heap with heap2
-	 *
+	 * Time Complexity: O(1).
 	 */
 	public void meld(FibonacciHeap heap2)
 	{
-		if(heap2.numOfTrees > 0) {
-			// add the two heaps
-			HeapNode min1Next = this.min.next;
-			HeapNode min2Prev = heap2.min.prev;
-			this.min.next = heap2.min;
-			heap2.min.prev = this.min;
-			min2Prev.next = min1Next;
-			min1Next.prev = min2Prev;
+		if (heap2 != null) {
+			if (heap2.numOfTrees > 0) {
+				// add the two heaps
+				HeapNode min1Next = this.min.next;
+				HeapNode min2Prev = heap2.min.prev;
+				this.min.next = heap2.min;
+				heap2.min.prev = this.min;
+				min2Prev.next = min1Next;
+				min1Next.prev = min2Prev;
 
-			// update the min value if needed
-			if (heap2.min.key < this.min.key) {
-				this.min = heap2.min;
+				// update the min value if needed
+				if (heap2.min.key < this.min.key) {
+					this.min = heap2.min;
+				}
+
+				this.size += heap2.size();
+				this.numOfTrees += heap2.numOfTrees;
 			}
-
-			this.size += heap2.size();
-			this.numOfTrees += heap2.numOfTrees;
 		}
 	}
 
 	/**
 	 * 
 	 * Return the number of elements in the heap
-	 *   
+	 *  Time Complexity: O(1).
 	 */
 	public int size()
 	{
@@ -430,7 +438,7 @@ public class FibonacciHeap
 	/**
 	 * 
 	 * Return the number of trees in the heap.
-	 * 
+	 *  Time Complexity: O(1).
 	 */
 	public int numTrees()
 	{

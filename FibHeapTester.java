@@ -161,7 +161,6 @@ public class FibHeapTester {
         fh2.insert(5, "E");
         fh2.insert(60, "F");
         fh.meld(fh2);
-        printHeap(fh);
         fh.deleteMin();
         assertEquals(5, fh.min.key, "Error deleteMin - wrong min key");
         assertEquals(8, fh.size(), "Error deleteMin - wrong size");
@@ -239,10 +238,10 @@ public class FibHeapTester {
         insertTests();
         FibHeapTester.testMeld();
         FibHeapTester.testMeldEmptyHeap();
-        //FibHeapTester.testCascadingCut();
-        deleteMinTests();
+//        FibHeapTester.testCascadingCut();
+        //deleteMinTests();
         //deleteTests();
-//        cutsTests();
+        cutsTests();
 
 
     }

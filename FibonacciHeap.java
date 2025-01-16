@@ -269,9 +269,11 @@ public class FibonacciHeap
 	public void decreaseKey(HeapNode x, int diff) 
 	{
 		x.key = x.key - diff;
-		// if there is a violation cut the child
-		if(x.key < x.parent.key){
-			this.cascadingCut(x,x.parent);
+		if (x.parent != null){
+			// if there is a violation cut the child
+			if(x.key < x.parent.key){
+				this.cascadingCut(x,x.parent);
+			}
 		}
 	}
 
@@ -312,6 +314,7 @@ public class FibonacciHeap
 			x.next.prev = x.prev;
 		}
 		this.makeRoot(x);
+		this.cuts++;
 	}
 
 
@@ -396,11 +399,12 @@ public class FibonacciHeap
 	{
 		if(heap2.numOfTrees > 0) {
 			// add the two heaps
-			HeapNode minNext = this.min.next;
+			HeapNode min1Next = this.min.next;
+			HeapNode min2Prev = heap2.min.prev;
 			this.min.next = heap2.min;
 			heap2.min.prev = this.min;
-			heap2.min.prev.next = minNext;
-			minNext.prev = heap2.min.prev;
+			min2Prev.next = min1Next;
+			min1Next.prev = min2Prev;
 
 			// update the min value if needed
 			if (heap2.min.key < this.min.key) {

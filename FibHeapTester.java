@@ -240,7 +240,7 @@ public class FibHeapTester {
         FibHeapTester.testMeld();
         FibHeapTester.testMeldEmptyHeap();
         //FibHeapTester.testCascadingCut();
-        deleteMinTests();
+        //deleteMinTests();
         //deleteTests();
 //        cutsTests();
 

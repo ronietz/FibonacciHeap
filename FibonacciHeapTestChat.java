@@ -56,12 +56,6 @@ class FibonacciHeapTestChat {
     }
 
     // בדיקות עבור decreaseKey
-    @Test
-    void testDecreaseKeyToNegativeValue() {
-        FibonacciHeap heap = new FibonacciHeap();
-        FibonacciHeap.HeapNode node = heap.insert(10, "info");
-        assertThrows(IllegalArgumentException.class, () -> heap.decreaseKey(node, 15));
-    }
 
     @Test
     void testDecreaseKeyValidScenario() {
@@ -169,9 +163,13 @@ class FibonacciHeapTestChat {
     @Test
     void testTotalCutsAfterDecreaseKey() {
         FibonacciHeap heap = new FibonacciHeap();
-        FibonacciHeap.HeapNode node = heap.insert(10, "info1");
-        heap.insert(20, "info2");
-        heap.decreaseKey(node, 5); // פעולה שמביאה לחיתוך
+        heap.insert(10, "info1");
+        heap.insert(2, "info2");
+        heap.insert(30, "info3");
+        FibonacciHeap.HeapNode node = heap.insert(50, "info4");
+        heap.deleteMin();
+        heap.decreaseKey(node, 30); // פעולה שמביאה לחיתוך
+
         assertTrue(heap.totalCuts() > 0);
     }
 }

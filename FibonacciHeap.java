@@ -74,7 +74,7 @@ public class FibonacciHeap
 	/**
 	 * 
 	 * Return the minimal HeapNode, null if empty.
-	 * Time Complexity:
+	 * Time Complexity: O(1)
 	 */
 	public HeapNode findMin()
 	{
@@ -85,6 +85,7 @@ public class FibonacciHeap
 	 *
 	 * connect two trees in the same rank
 	 * returns pointer to new root
+	 * Time Complexity: O(1)
 	 *
 	 */
 	public HeapNode connectTreesSameRank(HeapNode root1, HeapNode root2)
@@ -124,9 +125,12 @@ public class FibonacciHeap
 		//return new root
         return minRoot;
     }
-	/*
+
+	/**
 	*
-	* delete min - only cut him from his kids and move them to the trees list as roots
+	* deleteMinWithoutConsolidating -
+	 * only cut him from his kids and move them to the trees list as roots
+	 *Time Complexity: O(log(n))
 	*
 	 */
 
@@ -163,12 +167,20 @@ public class FibonacciHeap
 	/**
 	 * 
 	 * Delete the minimal item
+	 * Time Complexity: O(log(n))
 	 *
 	 */
 	public void deleteMin()
 	{
 		// check if heap empty - no min to delete
 		if (this.size == 0) {
+			return;
+		}
+		// check if heap is only min
+		if (this.size == 1) {
+			this.min = null;
+			this.numOfTrees = 0;
+			this.size = 0;
 			return;
 		}
 
@@ -181,6 +193,7 @@ public class FibonacciHeap
 			// min have no kids, save pointer to next node
 			currRoot = this.min.next;
 		}
+
 
 		deleteMinWithoutConsolidating();
 
@@ -353,6 +366,12 @@ public class FibonacciHeap
 	 */
 	public void delete(HeapNode x) 
 	{
+		//check if x is min and call deleteMin
+		if (x == this.min) {
+			deleteMin();
+			return;
+		}
+
 		//save pointer to min
 		HeapNode currMin = this.min;
 

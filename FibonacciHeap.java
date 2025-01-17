@@ -244,6 +244,8 @@ public class FibonacciHeap
 			currRoot = treesArray[0];
 			HeapNode nextRoot;
 
+			//set mark as False for roots
+			currRoot.mark = false;
 			//set pointers
 			currRoot.parent = null;
 			currRoot.prev = treesArray[treesArray.length - 1];
@@ -256,6 +258,9 @@ public class FibonacciHeap
 					minKey = nextRoot.key;
 					this.min = nextRoot;
 				}
+
+				//set mark as False for roots
+				currRoot.mark = false;
 
 				// set pointers
 				currRoot.next = nextRoot;

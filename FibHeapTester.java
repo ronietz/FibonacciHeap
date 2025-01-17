@@ -146,14 +146,12 @@ public class FibHeapTester {
         assertEquals(20, fh.min.key, "Error deleteMin - wrong min key");
         assertEquals(7, fh.size(), "Error deleteMin - wrong size");
         assertEquals(3, fh.numOfTrees, "Error deleteMin - wrong numOfTrees");
-        printHeap(fh);
 
         System.out.println("-----deleteMin after deleteMin test-----");
         fh.deleteMin();
         assertEquals(30, fh.min.key, "Error deleteMin - wrong min key");
         assertEquals(6, fh.size(), "Error deleteMin - wrong size");
         assertEquals(2, fh.numOfTrees, "Error deleteMin - wrong numOfTrees");
-        printHeap(fh);
 
         System.out.println("-----deleteMin after few actions test-----");
         FibonacciHeap fh2 = new FibonacciHeap();
@@ -165,7 +163,6 @@ public class FibHeapTester {
         assertEquals(5, fh.min.key, "Error deleteMin - wrong min key");
         assertEquals(8, fh.size(), "Error deleteMin - wrong size");
         assertEquals(1, fh.numOfTrees, "Error deleteMin - wrong numOfTrees");
-        printHeap(fh);
 
         System.out.println("-----deleteMin 2 keys with minimum val test-----");
         fh.insert(5, "another 5");
@@ -173,7 +170,6 @@ public class FibHeapTester {
         assertEquals(5, fh.min.key, "Error deleteMin - wrong min key");
         assertEquals(8, fh.size(), "Error deleteMin - wrong size");
         assertEquals(1, fh.numOfTrees, "Error deleteMin - wrong numOfTr");
-        printHeap(fh);
 
         System.out.println("-----deleteMin after deacreseKey test-----");
         fh.decreaseKey(fh.min, 2);
@@ -181,7 +177,6 @@ public class FibHeapTester {
         assertEquals(30, fh.min.key, "Error deleteMin - wrong min key");
         assertEquals(7, fh.size(), "Error deleteMin - wrong size");
         assertEquals(3, fh.numOfTrees, "Error deleteMin - wrong numOfTrees");
-        printHeap(fh);
 
         System.out.println("TEST DELETE MIN PASSED!");
     }
@@ -194,7 +189,25 @@ public class FibHeapTester {
         FibonacciHeap.HeapNode node3 = fh.insert(30, "C");
         FibonacciHeap.HeapNode node4 = fh.insert(50, "D");
         fh.delete(node3);
+        assertEquals(3, fh.size(), "Error deleteMin - wrong size");
+        assertEquals(3, fh.numOfTrees, "Error deleteMin - wrong numOfTrees");
+
+        FibonacciHeap fh2 = new FibonacciHeap();
+        FibonacciHeap.HeapNode node5 = fh2.insert(30, "C");
+        FibonacciHeap.HeapNode node6 = fh2.insert(50, "E");
+        FibonacciHeap.HeapNode node7 = fh2.insert(60, "F");
+        FibonacciHeap.HeapNode node8 = fh2.insert(10, "A");
+        fh.meld(fh2);
+        fh.deleteMin();
         printHeap(fh);
+        fh.delete(node5);// 30, C
+        printHeap(fh);
+
+        assertEquals(5, fh.size(), "Error deleteMin - wrong size");
+        assertEquals(3, fh.numOfTrees, "Error deleteMin - wrong numOfTrees");
+        assertEquals(10, fh.min.key, "Error deleteMin - wrong min key");
+        assertEquals(1, node2.rank, "Error deleteMin - wrong rank");
+        assertEquals(false, node2.mark, "Error deleteMin - wrong mark");
 
     }
 
@@ -227,11 +240,63 @@ public class FibHeapTester {
         FibonacciHeap.HeapNode node12 = fh.insert(3, " ");
 
         fh.deleteMin();
-        fh.delete(node3);
-        assertEquals(5, fh.totalCuts(), "Error deleteMin - wrong totalCuts");
+        fh.delete(node3); //30, C
+
+        assertEquals(6, fh.totalCuts(), "Error deleteMin - wrong totalCuts");
 
         System.out.println("-----cuts after decreaseKey test-----");
-        //TO DO
+        FibonacciHeap heap = new FibonacciHeap();
+        node1 = heap.insert(10, "A");
+        node2 = heap.insert(20, "B");
+        node3 = heap.insert(30, "C");
+        node4 = heap.insert(40, "D");
+        node5 = heap.insert(50, "E");
+        node6 = heap.insert(60, "F");
+        node7 = heap.insert(20, "another 20");
+        node8 = heap.insert(30, "another 30");
+        node9 = heap.insert(50, "another 50");
+        node10 = heap.insert(60, "another 60");
+        node11 = heap.insert(15, "F");
+        node12 = heap.insert(16, "A");
+        FibonacciHeap.HeapNode node13 = heap.insert(17, "B");
+        FibonacciHeap.HeapNode node14 = heap.insert(18, "C");
+        FibonacciHeap.HeapNode node15 = heap.insert(19, "D");
+        FibonacciHeap.HeapNode node16 = heap.insert(21, "another 21");
+        FibonacciHeap.HeapNode node17 = heap.insert(22, "another 22");
+        FibonacciHeap.HeapNode node18 = heap.insert(23, "another 23");
+        FibonacciHeap.HeapNode node19 = heap.insert(24, "another 24");
+        FibonacciHeap.HeapNode node20 = heap.insert(25, "another 25");
+        FibonacciHeap.HeapNode node21 = heap.insert(26, "another 25");
+        FibonacciHeap.HeapNode node22 = heap.insert(27, "another 25");
+        FibonacciHeap.HeapNode node23 = heap.insert(28, "another 25");
+        FibonacciHeap.HeapNode node24 = heap.insert(29, "another 25");
+        FibonacciHeap.HeapNode node25 = heap.insert(31, "another 25");
+        FibonacciHeap.HeapNode node26 = heap.insert(32, "another 25");
+        FibonacciHeap.HeapNode node27 = heap.insert(33, "another 25");
+        FibonacciHeap.HeapNode node28 = heap.insert(34, "another 25");
+        FibonacciHeap.HeapNode node29 = heap.insert(35, "another 25");
+        FibonacciHeap.HeapNode node30 = heap.insert(36, "another 25");
+        FibonacciHeap.HeapNode node31 = heap.insert(37, "another 25");
+        FibonacciHeap.HeapNode node32 = heap.insert(38, "another 25");
+        FibonacciHeap.HeapNode node33 = heap.insert(39, "another 25");
+        FibonacciHeap.HeapNode node34 = heap.insert(40, "another 25");
+        FibonacciHeap.HeapNode node35 = heap.insert(41, "another 25");
+        FibonacciHeap.HeapNode node36 = heap.insert(42, "another 25");
+        FibonacciHeap.HeapNode node37 = heap.insert(43, "another 25");
+        FibonacciHeap.HeapNode node38 = heap.insert(44, "another 25");
+        FibonacciHeap.HeapNode node39 = heap.insert(45, "another 25");
+        FibonacciHeap.HeapNode node40 = heap.insert(46, "another 25");
+        FibonacciHeap.HeapNode node41 = heap.insert(47, "another 25");
+
+
+
+        heap.deleteMin();
+        heap.delete(node29);
+        heap.delete(node20);
+        int c = heap.totalCuts();
+        heap.decreaseKey(node28, 20);
+        assertEquals(c + 3, heap.totalCuts(), "Error totalCuts - wrong totalCuts");
+
     }
 
     public static void main(String[] args) {
@@ -239,11 +304,9 @@ public class FibHeapTester {
         FibHeapTester.testMeld();
         FibHeapTester.testMeldEmptyHeap();
 
-        //FibHeapTester.testCascadingCut();
-
-        //FibHeapTester.testCascadingCut();
-        //deleteMinTests();
-        //deleteTests();
+        FibHeapTester.testCascadingCut();
+        deleteMinTests();
+        deleteTests();
         cutsTests();
 
 
